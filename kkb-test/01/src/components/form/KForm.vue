@@ -12,6 +12,8 @@ export default {
       form: this
     };
   },
+  name: "KForm",
+  componentName: "KForm",
   props: {
     model: {
       type: Object,
@@ -21,12 +23,20 @@ export default {
       type: Object
     }
   },
+  created() {
+    this.fields = [];
+    this.$on("kkb.form.addField", item => {
+      this.fields.push(item);
+    });
+  },
   methods: {
     validate(cb) {
       // [resultPromise]
-      const tasks = this.$children
-        .filter(item => item.prop)
-        .map(item => item.validate());
+      // const tasks = this.$children
+      //   .filter(item => item.prop)
+      //   .map(item => item.validate());
+
+      const tasks = this.fields.map(item => item.validate());
       Promise.all(tasks)
         .then(() => cb(true))
         .catch(() => cb(false));

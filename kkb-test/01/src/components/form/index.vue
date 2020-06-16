@@ -17,10 +17,10 @@
 </template>
 
 <script>
-import KInput from "@/01/components/form/KInput.vue";
-import KFormItem from "@/01/components/form/KFormItem.vue";
-import KForm from "@/01/components/form/KForm.vue";
-import Notice from "@/01/components/comps/notice.vue";
+import KInput from "@/components/form/KInput.vue";
+import KFormItem from "@/components/form/KFormItem.vue";
+import KForm from "@/components/form/KForm.vue";
+// import Notice from "@/components/comps/notice.vue";
 
 export default {
   data() {
@@ -43,11 +43,17 @@ export default {
   methods: {
     login() {
       this.$refs.form.validate(valid => {
-        this.$create(Notice, {
+        this.$notice({
           title: "标题",
           message: valid ? "请求登录!" : "校验失败!",
           duration: 1000
         }).show();
+
+        // this.$create(Notice, {
+        //   title: "标题",
+        //   message: valid ? "请求登录!" : "校验失败!",
+        //   duration: 1000
+        // }).show();
 
         // if (valid) {
         //   console.log("submit");

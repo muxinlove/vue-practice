@@ -1,17 +1,18 @@
 <template>
   <div id="app">
-    <home />
+    <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
+    <Index />
   </div>
 </template>
 
 <script>
-// import Home from "./01/components/communication/index.vue";
-import Home from "./01/components/form/index.vue";
+// import HelloWorld from './components/HelloWorld.vue'
+import Index from "@/components/index.vue";
 
 export default {
   name: "App",
   components: {
-    Home
+    Index
   }
 };
 </script>

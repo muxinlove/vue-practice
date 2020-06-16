@@ -5,8 +5,12 @@
 </template>
 
 <script>
+import emitter from "../../mixins/emitter.js";
+
 export default {
   inheritAttrs: false,
+  name: "KInput",
+  componentName: "KInput",
   props: {
     value: {
       type: String,
@@ -17,12 +21,14 @@ export default {
       default: "text"
     }
   },
+  mixins: [emitter],
   methods: {
     onInput(e) {
       this.$emit("input", e.target.value);
 
       // 校验
-      this.$parent.$emit("validate");
+      // this.$parent.$emit("validate");
+      this.dispatch("KFormItem", "validate");
     }
   }
 };
