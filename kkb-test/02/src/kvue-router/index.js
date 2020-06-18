@@ -9,7 +9,11 @@ export default class KVueRouter {
 
     // 需要创建响应式的current属性
     // 工具 响应式
-    Vue.util.defineReactive(this, 'current', '/')
+    // Vue.util.defineReactive(this, 'current', '/')
+    this.current = window.location.hash.slice(1) || '/'
+    Vue.util.defineReactive(this, 'matched', [])
+    // match 方法递归遍历路由表，获取匹配关系数组
+    this.match()
 
     // 监控url变化
     window.addEventListener('hashchange', this.onHashChange.bind(this))
@@ -25,6 +29,28 @@ export default class KVueRouter {
   onHashChange() {
     console.log(window.location.hash);
     this.current = window.location.hash.slice(1)
+
+    this.matched = []
+    this.match()
+  }
+
+  match(routes) {
+    routes = routes || this.$options.routes
+    // 递归遍历
+    for (const route of routes) {
+      if (route.path === '/' && this.current === '/') {
+        this.matched.push(route)
+        return
+      }
+
+      if (route.path !== '/' && this.current.indexOf(route.path) != -1) {
+        this.matched.push(route)
+        if (route.children) {
+          this.match(route.children)
+        }
+        return
+      }
+    }
   }
 }
 

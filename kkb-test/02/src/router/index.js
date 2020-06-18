@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
-// import VueRouter from '../kvue-router/index.js'
+// import VueRouter from 'vue-router'
+import VueRouter from '../kvue-router/index.js'
 import Home from '../components/home.vue'
 // import Layout from '../components/layout.vue'
 
@@ -19,31 +19,37 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../components/about.vue')
-  },
-  {
-    path: '/user/:id',
-    name: 'user',
-    component: () => import(/* webpackChunkName: "user" */ '../components/user.vue'),
+    component: () => import('../components/about.vue'),
     children: [
       {
-        path: 'profile',
-        component: () => import(/* webpackChunkName: "profile" */ '../components/profile.vue')
-      },
-      {
-        path: 'posts',
-        component: () => import(/* webpackChunkName: "posts" */ '../components/posts.vue')
-      },
-      {
-        path: 'name',
-        components: {
-          default: () => import(/* webpackChunkName: "posts" */ '../components/posts.vue'),
-          main: () => import(/* webpackChunkName: "main" */ '../components/main.vue'),
-          bottom: () => import(/* webpackChunkName: "bottom" */ '../components/bottom.vue'),
-        }
-      },
+        path: 'info',
+        component: () => import('../components/info.vue')
+      }
     ]
-  }
+  },
+  // {
+  //   path: '/user/:id',
+  //   name: 'user',
+  //   component: () => import(/* webpackChunkName: "user" */ '../components/user.vue'),
+  //   children: [
+  //     {
+  //       path: 'profile',
+  //       component: () => import(/* webpackChunkName: "profile" */ '../components/profile.vue')
+  //     },
+  //     {
+  //       path: 'posts',
+  //       component: () => import(/* webpackChunkName: "posts" */ '../components/posts.vue')
+  //     },
+  //     {
+  //       path: 'name',
+  //       components: {
+  //         default: () => import(/* webpackChunkName: "posts" */ '../components/posts.vue'),
+  //         main: () => import(/* webpackChunkName: "main" */ '../components/main.vue'),
+  //         bottom: () => import(/* webpackChunkName: "bottom" */ '../components/bottom.vue'),
+  //       }
+  //     },
+  //   ]
+  // }
 ]
 
 // const routes = [

@@ -7,8 +7,8 @@
 
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
-// import Index from "@/components/index.vue";
-import Index from "@/components/vuex.vue";
+import Index from "@/components/index.vue";
+// import Index from "@/components/vuex.vue";
 
 export default {
   name: "App",
