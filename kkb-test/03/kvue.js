@@ -1,9 +1,17 @@
+// let watcher = []
+
 function defineReactive(obj, key, val) {
   // 递归
   observe(obj[key])
+
+  // dep 和 key  一一对应
+  const dep = new Dep()
+
   Object.defineProperty(obj, key, {
     get() {
       console.log('get ', key);
+      // 依赖收集
+      Dep.target && dep.addDep(Dep.target);
       return val
     },
     set(newVal) {
@@ -11,6 +19,8 @@ function defineReactive(obj, key, val) {
       if (newVal !== val) {
         observe(newVal)
         val = newVal
+        // watcher.forEach(w => w.update())
+        dep.notify()
       }
     }
   })
@@ -25,14 +35,34 @@ function observe(obj) {
   new Observer(obj)
 }
 
+function proxy(vm, sourceKey) {
+  Object.keys(vm[sourceKey]).forEach(key => {
+    Object.defineProperty(vm, key, {
+      get() {
+        return vm[sourceKey][key]
+      },
+      set(newVal) {
+        if (newVal !== vm[sourceKey].key) {
+          vm[sourceKey][key] = newVal
+        }
+      }
+    })
+  })
+}
+
 class KVue {
   constructor(options) {
     // 保存选项
     this.$options = options
     this.$data = options.data
-
     // 响应化处理
     observe(this.$data)
+
+    // 代理
+    proxy(this, '$data')
+
+    // 编译
+    new Compiler(options.el, this)
   }
 }
 
@@ -54,4 +84,35 @@ class Observer {
   }
 
   // 数组数据响应化
+}
+
+// 观察者：保存更新函数，数据更新时，执行更新函数
+class Watcher {
+  constructor(vm, key, updateFn) {
+    this.vm = vm
+    this.key = key
+    this.updateFn = updateFn
+
+    // watcher实例保存在Dep的静态属性上，做依赖收集
+    Dep.target = this
+    this.vm[this.key] // 触发getter
+    Dep.target = null // 置空
+  }
+
+  update() {
+    this.updateFn.call(this.vm, this.vm[this.key])
+  }
+}
+
+// 依赖：管理某个key对应的watcher实例
+class Dep {
+  constructor(dep) {
+    this.deps = []
+  }
+  addDep(dep) {
+    this.deps.push(dep)
+  }
+  notify() {
+    this.deps.forEach(dep => dep.update())
+  }
 }
