@@ -54,10 +54,12 @@ class Compiler {
       const exp = attr.value
       if (this.isDirective(attrName)) {
         const dir = attrName.substring(2); // xx
-        // this[dir] && this[dir](node, exp)
-        this.update(node, exp, dir)
+        this[dir] && this[dir](node, exp)
       } else if (this.isEvent(attrName)) {
-
+        // @click='onClick'
+        const eventName = attrName.substring(1); // @click
+        // exp onClick 
+        this.eventHandler(node, exp, eventName)
       }
     })
   }
@@ -91,5 +93,23 @@ class Compiler {
   }
   htmlUpdater(node, val) {
     node.innerHTML = val
+  }
+  eventHandler(node, exp, dir) {
+    const fn = this.$vm.$options.methods && this.$vm.$options.methods[exp]
+    node.addEventListener(dir, fn.bind(this.$vm))
+  }
+
+  // k-model 语法糖  value绑定和事件监听
+  model(node, exp) {
+    // update 方法只完成赋值和更新
+    this.update(node, exp, 'model')
+    // 事件监听
+    node.addEventListener('input', e => {
+      this.$vm[exp] = e.target.value
+    })
+  }
+
+  modelUpdater(node, value) {
+    node.value = value
   }
 }

@@ -1,3 +1,18 @@
+// 数组响应化
+const originalProto = Array.prototype;
+// 备份一份
+const arrayProto = Object.create(originalProto);
+const arrayMethods = ['push', 'pop', 'unshift', 'shift', 'reserve', 'sort', 'splice'];
+arrayMethods.forEach(method => {
+  arrayProto[method] = () => {
+    // 原始操作
+    originalProto[method].apply(this, arguments);
+    // 覆盖
+    // 通知更新
+    console.log('数组执行', method, '操作');
+  }
+})
+// 对象响应化
 // 闭包
 function defineReactive(obj, key, val) {
   // 递归
@@ -25,9 +40,17 @@ function observe(obj) {
     // 希望传入的是obj
     return
   }
-  Object.keys(obj).forEach(key => {
-    defineReactive(obj, key, obj[key])
-  })
+  if (Array.isArray(obj)) {
+    obj.__proto__ = arrayProto
+    // 对数组内部元素进行响应化
+    obj.forEach(item => {
+      observe(item)
+    })
+  } else {
+    Object.keys(obj).forEach(key => {
+      defineReactive(obj, key, obj[key])
+    })
+  }
 }
 
 function set(obj, key, val) {
@@ -44,7 +67,8 @@ let obj = {
   bar: 'bar',
   baz: {
     a: 1
-  }
+  },
+  arr: [1, 2, 3]
 }
 
 observe(obj)
@@ -70,3 +94,4 @@ observe(obj)
 // 改变数组 只有7个 覆盖这7个方法
 // push unshfit pop shift reverse sort splice
 // 解决方案：替换数组实例的原型方法，原实现之外 通知更新
+obj.arr.push(4)
