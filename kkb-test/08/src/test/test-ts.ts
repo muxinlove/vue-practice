@@ -92,3 +92,73 @@ interface Feature2<T> {
   ok: 0 | 1;
   data: T;
 }
+
+
+// 装饰器
+// 类装饰器
+// 参数只有一个 类构造函数
+// 表达式会在运行时当作函数被调用，类的构造函数作为其唯一的参数。
+// function log(target: Function) {
+//   // target是构造函数 
+//   console.log(target === Foo);// true 
+
+//   target.prototype.log = function () {
+//     console.log(this.bar);
+//   }
+// }
+
+// @log
+// class Foo {
+//   bar = 'bar'
+// }
+// const foo = new Foo();
+// // @ts-ignore  ts会忽略这一行
+// foo.log()
+
+
+// 方法装饰器
+// 1-实例 2-方法名 3-descriptor对象:真实类型是PropertyDescriptor(类似于defineProperty 里面有value get set)
+// function dong(target: any, name: string, descriptor: any) {
+//   // 这里通过修改descriptor.value扩展了bar方法 
+//   const baz = descriptor.value;
+//   descriptor.value = function (val: string) {
+//     console.log('dong~~');
+//     baz.call(this, val);
+//   }
+//   return descriptor
+// }
+
+
+// class Foo {
+//   bar = 'bar'
+
+//   @dong
+//   setBar(val: string) {
+//     this.bar = val
+//   }
+// }
+// const foo = new Foo()
+// foo.setBar('lalala')
+
+
+// 属性装饰器
+// 仅接收2个参数 1-实例 2-属性名称
+// function mua(target: any, name: string) {
+//   target[name] = 'mua~~~'
+// }
+
+// 工厂函数的形式 可以配置参数
+function mua(param: string) {
+  // 返回才是装饰器函数
+  return function (target: any, name: string) {
+    target[name] = param
+  }
+}
+
+class Foo {
+  @mua('mua mua~~')
+  ns!: string;
+}
+
+const foo = new Foo()
+console.log('ns', foo.ns);
