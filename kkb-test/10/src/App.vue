@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Test></Test>
     <SideBar></SideBar>
     {{$route.path}}
     <router-view></router-view>
@@ -13,10 +14,12 @@
 
 <script>
 import SideBar from "@/components/sidebar/Index.vue";
+import Test from "@/components/Test.vue";
 export default {
   name: "App",
   components: {
-    SideBar
+    SideBar,
+    Test
   }
 };
 </script>
